@@ -1,0 +1,55 @@
+ext {
+
+    android = [
+            compileSdkVersion       : 26,
+            buildToolsVersion       : "26.0.2",
+            minSdkVersion           : 18,
+            targetSdkVersion        : 26,
+            versionCode             : 1,
+            versionName             : "1.0.1",
+    ]
+
+    version = [
+            supportLibraryVersion   : "26.1.1",
+            smartrefreshVersion     : "1.0.5.1",
+            okhttpVersion           : "3.9.0",
+            retrofitVersion         : "2.3.0",
+            glideVersion            : "4.0.0",
+            daggerVersion           : "2.15",
+            butterknifeVersion      : "8.8.1",
+            fragmentationVersion    : "1.1.9",
+            leakcanaryVersion       : "1.5.4"
+    ]
+
+    dependencies = [
+            //base
+            "appcompat-v7"                      : "com.android.support:appcompat-v7:${version["supportLibraryVersion"]}",
+            "support-v4"                        : "com.android.support:support-v4:${version["supportLibraryVersion"]}",
+            "design"                            : "com.android.support:design:${version["supportLibraryVersion"]}",
+            "constraint-layout"                 : "com.android.support.constraint:constraint-layout:1.0.2",
+
+            //rx
+            "rxjava"                            : "io.reactivex.rxjava2:rxjava:2.1.5",
+            "rxandroid"                         : "io.reactivex.rxjava2:rxandroid:2.0.1",
+            "rxbinding"                         : "com.jakewharton.rxbinding2:rxbinding:2.1.0",
+            "rxpermissions"                     : "com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar",
+
+            //di
+            "dagger"                            : "com.google.dagger:dagger:${version["daggerVersion"]}",
+            "dagger-compiler"                   : "com.google.dagger:dagger-compiler:${version["daggerVersion"]}",
+            "dagger-android"                    : "com.google.dagger:dagger-android:${version["daggerVersion"]}",
+            "dagger-android-support"            : "com.google.dagger:dagger-android-support:${version["daggerVersion"]}",
+            "dagger-android-processor"          : "com.google.dagger:dagger-android-processor:${version["daggerVersion"]}",
+            "javax_annotation"                  : "org.glassfish:javax.annotation:10.0-b28",
+            "butterknife"                       : "com.jakewharton:butterknife:${version["butterknifeVersion"]}",
+            "butterknife-compiler"              : "com.jakewharton:butterknife-compiler:${version["butterknifeVersion"]}",
+
+            //other
+            "crashreport_upgrade"               : "com.tencent.bugly:crashreport_upgrade:latest.release",
+            "lottie"                            : "com.airbnb.android:lottie:2.3.0",
+            "fragmentation"                     : "me.yokeyword:fragmentation:${version["fragmentationVersion"]}",
+            "fragmentation-swipeback"           : "me.yokeyword:fragmentation-swipeback:${version["fragmentationVersion"]}",
+            "logger"                            : "com.orhanobut:logger:2.1.1",
+    ]
+
+}
