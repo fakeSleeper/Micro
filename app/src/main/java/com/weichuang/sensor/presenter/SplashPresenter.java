@@ -41,6 +41,7 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
                         }else {
                             //跳转到登录状态
                             //第一次提交
+                            //第二次提交
                         }
                     }
                 }));
