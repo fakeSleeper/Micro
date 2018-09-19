@@ -40,7 +40,7 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
                             view.jumpToMain();
                         }else {
                             //跳转到登录状态
-                            //test```
+                            //家庭版
 
                         }
                     }
