@@ -13,6 +13,10 @@ public class Constants {
      * Bugly APP ID
      */
     public static final String BUGLY_ID = "c30519ac65";
+    /**
+     * 2s
+     */
+    public static final long DOUBLE_INTERVAL_TIME = 2000;
 
     /**
      * Tab colors

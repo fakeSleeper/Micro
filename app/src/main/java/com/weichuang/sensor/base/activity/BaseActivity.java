@@ -2,6 +2,7 @@ package com.weichuang.sensor.base.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.weichuang.sensor.base.presenter.AbstractPresenter;
 import com.weichuang.sensor.base.view.AbstractView;
@@ -10,6 +11,9 @@ import com.weichuang.sensor.utils.CommonUtils;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 
 /**
  * desc : 所有activity基类
@@ -18,13 +22,13 @@ import dagger.android.AndroidInjection;
  * @date 2018/8/13.
  */
 
-public abstract class BaseActivity<T extends AbstractPresenter> extends AbstractSimpleActivity implements AbstractView/*, HasSupportFragmentInjector*/ {
+public abstract class BaseActivity<T extends AbstractPresenter> extends AbstractSimpleActivity implements AbstractView, HasSupportFragmentInjector {
 
     /**
      * 为每个fragment分配注入器，注入依赖
      */
-   // @Inject
-   // DispatchingAndroidInjector<Fragment> mFragmentDispatchingAndroidInjector;
+    @Inject
+    DispatchingAndroidInjector<Fragment> mFragmentDispatchingAndroidInjector;
 
     /**
      * 逻辑业务
@@ -54,10 +58,10 @@ public abstract class BaseActivity<T extends AbstractPresenter> extends Abstract
         super.onDestroy();
     }
 
-//    @Override
-//    public AndroidInjector<Fragment> supportFragmentInjector() {
-//        return mFragmentDispatchingAndroidInjector;
-//    }
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return mFragmentDispatchingAndroidInjector;
+    }
 
     @Override
     public void showLoginView() {
