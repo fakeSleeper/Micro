@@ -23,7 +23,7 @@ public interface AppComponent {
     void inject(MicroPortApp microPortApp);
 
     /**
-     * 像外暴露 可以提供的依赖
+     * 向外暴露 可以提供的依赖
      * @return
      */
     MicroPortApp getContext();

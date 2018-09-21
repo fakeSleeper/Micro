@@ -13,10 +13,20 @@ public class Constants {
      * Bugly APP ID
      */
     public static final String BUGLY_ID = "c30519ac65";
+
     /**
-     * 2s
+     * 2s间隔
      */
     public static final long DOUBLE_INTERVAL_TIME = 2000;
+
+    /**
+     * fragment tags
+     */
+    public static final String HOSPITAL = "hospital";
+    public static final String TRAIN = "train";
+    public static final String SETTING = "setting";
+    public static final String[] TAGS = {HOSPITAL, TRAIN, SETTING};
+
 
     /**
      * Tab colors

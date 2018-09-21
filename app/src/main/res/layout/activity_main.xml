@@ -39,26 +39,27 @@
         </LinearLayout>
 
     </android.support.v4.app.FragmentTabHost>
-
-    <ImageView
-        android:id="@+id/main_image_train"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="17dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/circle_big" />
-
-    <TextView
-        android:id="@+id/main_tv_train"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="2dp"
-        android:layout_centerInParent="true"
-        android:text="训练"
-        android:textSize="12sp"
-        android:textColor="@color/colorGrey" />
+        android:layout_marginBottom="@dimen/dp_24"
+        android:layout_centerInParent="true">
+        <ImageView
+            android:id="@+id/main_image_train"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/circle_grey" />
+        <TextView
+            android:id="@+id/main_text_train"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/sp_24"
+            android:textColor="@color/news_read"
+            android:text="训练"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
 
 </RelativeLayout>

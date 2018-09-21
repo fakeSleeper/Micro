@@ -42,6 +42,7 @@ public class MicroPortApp extends Application implements HasActivityInjector {
     @Override
     public void onCreate() {
         super.onCreate();
+        instance=this;
         DaggerAppComponent.builder()
                 .appModule(new AppModule(instance))
                 .build().inject(this);

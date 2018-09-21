@@ -1,6 +1,5 @@
 package com.weichuang.sensor.base.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -26,14 +25,9 @@ public abstract class BaseFragment<T extends AbstractPresenter> extends Abstract
     protected T mPresenter;
 
     @Override
-    public void onAttach(Activity activity) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        AndroidSupportInjection.inject(this);
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }

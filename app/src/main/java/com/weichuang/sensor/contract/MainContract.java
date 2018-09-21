@@ -14,7 +14,6 @@ public interface MainContract {
      * MainActivity UI 操作
      */
     interface  View extends AbstractView{
-        // TODO: 2018/9/20 暂时 不知道要添加什么方法
 
     }
 

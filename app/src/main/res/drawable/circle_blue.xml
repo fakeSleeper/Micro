@@ -2,10 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="oval">
     <stroke
-        android:width="@dimen/dp_2"
-        android:color="@color/colorGrey"
+        android:width="@dimen/dp_1"
+        android:color="@color/blue_btn"
         />
     <size
-        android:width="@dimen/dp_30"
-        android:height="@dimen/dp_30"/>
+        android:width="@dimen/dp_48"
+        android:height="@dimen/dp_48"/>
 </shape>
+
