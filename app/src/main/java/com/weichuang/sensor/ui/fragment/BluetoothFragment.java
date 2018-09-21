@@ -9,6 +9,7 @@ import com.weichuang.sensor.app.MicroPortApp;
 import com.weichuang.sensor.base.fragment.BaseFragment;
 import com.weichuang.sensor.contract.BluetoothContract;
 import com.weichuang.sensor.presenter.BluetoothPresenter;
+import com.weichuang.sensor.utils.CommonUtils;
 import com.weichuang.sensor.widget.TipsDialog;
 
 /**
@@ -56,6 +57,8 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
                 if (resultCode == Activity.RESULT_OK) {
                 } else {
                     //finish();
+                    CommonUtils.showMessage(getActivity(),"主人不让打开蓝牙");
+                    mPresenter.unRegisterReceiver();
                 }
                 break;
             default:

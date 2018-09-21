@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Micro Port</string>
     <string name="double_click_exit_tint">再按一次后退键退出MicroPort</string>
     <string name="tips">提示</string>
     <string name="ok">确定</string>

@@ -24,6 +24,7 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
 
     @Inject
     public BluetoothPresenter() {
+
     }
 
     /**
@@ -64,20 +65,14 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
             mView.showDeviceUnSupportBleTips();
             return;
         }
-
+        registerReceiver(mReceiver, mFilter);
         openBluetooth();
-        //检查蓝牙是否打开
-//        registerReceiver(mReceiver, mFilter);
-//        mBtAdapterEnabled = mBtAdapter.isEnabled();
-//        if (mBtAdapterEnabled) {
-//            // Start straight away
-//            startBluetoothLeService();
-//        } else {
-//            // Request BT adapter to be turned on
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableIntent, REQ_ENABLE_BT);
-//        }
     }
 
-
+    @Override
+    public void detachView() {
+        //切换fragment时，关闭接收广播
+        unregisterReceiver(mReceiver, mFilter);
+        super.detachView();
+    }
 }
