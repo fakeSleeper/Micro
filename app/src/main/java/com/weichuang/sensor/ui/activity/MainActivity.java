@@ -116,6 +116,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     }
                     // TODO: 2018/9/26  开始或关闭搜索蓝牙设备
 
+
                     mRadar.setState(!isSearching);
                 } else {
                     mTabHost.setCurrentTab(1);
