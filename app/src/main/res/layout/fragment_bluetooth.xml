@@ -4,10 +4,28 @@
              android:layout_height="match_parent"
     >
 
-    <TextView
-        android:id="@+id/tv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="bluetooth"/>
+        android:orientation="vertical"
+        >
+        <!-- 两个recycleView -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/connected_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_150"
+            android:background="@color/colorAccent">
+        </android.support.v7.widget.RecyclerView>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_150"
+            android:layout_marginTop="@dimen/dp_50"
+            android:background="@color/colorPrimary"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
 </FrameLayout>

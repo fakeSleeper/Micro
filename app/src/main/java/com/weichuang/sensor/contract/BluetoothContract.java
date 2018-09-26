@@ -17,6 +17,12 @@ public interface BluetoothContract {
         void showDeviceUnSupportBleTips();
 
         /**
+         * 显示 蓝牙关闭 提示
+         */
+        void showBleClosedTips();
+
+
+        /**
          * 请求打开蓝牙
          */
         void requestOpenBluetooth();

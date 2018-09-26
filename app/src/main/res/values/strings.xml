@@ -4,4 +4,11 @@
     <string name="tips">提示</string>
     <string name="ok">确定</string>
     <string name="un_support_ble">此设备不支持蓝牙功能</string>
+    <string name="ble_closed">必须开启蓝牙才能使用训练功能</string>
+    <string name="title_hospital">医院</string>
+    <string name="title_device">康师傅</string>
+    <string name="title_setting">设置</string>
+    <string name="training">训 练</string>
+    <string name="searching">搜索中</string>
+    <string name="search_device">搜索设备</string>
 </resources>

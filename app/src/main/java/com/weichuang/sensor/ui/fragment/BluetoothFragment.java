@@ -43,6 +43,17 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
     }
 
     @Override
+    public void showBleClosedTips() {
+        TipsDialog tipsDialog = new TipsDialog(getActivity()) {
+            @Override
+            public String getContent() {
+                return MicroPortApp.getInstance().getResources().getString(R.string.ble_closed);
+            }
+        };
+        tipsDialog.show();
+    }
+
+    @Override
     public void requestOpenBluetooth() {
         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableIntent, REQUEST_ENABLE_BLE);
@@ -53,16 +64,14 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_ENABLE_BLE:
-                // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
                 } else {
-                    //finish();
                     CommonUtils.showMessage(getActivity(),"主人不让打开蓝牙");
-                    mPresenter.unRegisterReceiver();
                 }
                 break;
             default:
                 break;
         }
     }
+
 }

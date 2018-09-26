@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,9 +12,20 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="false"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="@dimen/dp_0">
+
+                <include layout="@layout/common_toolbar"/>
+            </android.support.design.widget.AppBarLayout>
+
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -29,37 +41,49 @@
 
             <TabWidget
                 android:id="@android:id/tabs"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_45"
-                android:divider="#00000000"
+                android:layout_weight="0"
                 android:background="#F5F5F5"
+                android:divider="#00000000"
                 android:gravity="center"
-                android:layout_weight="0"/>
+                android:orientation="horizontal"/>
         </LinearLayout>
 
     </android.support.v4.app.FragmentTabHost>
-    <RelativeLayout
-        android:layout_width="@dimen/dp_48"
-        android:layout_height="@dimen/dp_48"
+
+    <com.weichuang.sensor.widget.RadarView
+        android:id="@+id/radar"
+        android:layout_width="@dimen/dp_64"
+        android:layout_height="@dimen/dp_64"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_24"
-        android:layout_centerInParent="true">
-        <ImageView
-            android:id="@+id/main_image_train"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/circle_grey" />
-        <TextView
-            android:id="@+id/main_text_train"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="@dimen/sp_24"
-            android:textColor="@color/news_read"
-            android:text="训练"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            />
-    </RelativeLayout>
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/dp_13"
+        android:gravity="center"
+        android:text="@string/training"
+        android:textSize="@dimen/sp_16"
+        />
+    <!--<RelativeLayout-->
+    <!--android:layout_width="@dimen/dp_56"-->
+    <!--android:layout_height="@dimen/dp_56"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_marginBottom="@dimen/dp_17"-->
+    <!--android:layout_centerInParent="true">-->
+    <!--<ImageView-->
+    <!--android:id="@+id/main_image_train"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:src="@drawable/circle_grey" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/main_text_train"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:textSize="@dimen/sp_24"-->
+    <!--android:textColor="@color/news_read"-->
+    <!--android:text="训练"-->
+    <!--android:gravity="center"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--/>-->
+    <!--</RelativeLayout>-->
 
 </RelativeLayout>
