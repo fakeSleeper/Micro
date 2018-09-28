@@ -7,14 +7,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.weichuang.sensor.R;
 import com.weichuang.sensor.app.MicroPortApp;
 import com.weichuang.sensor.base.fragment.BaseFragment;
 import com.weichuang.sensor.contract.BluetoothContract;
 import com.weichuang.sensor.presenter.BluetoothPresenter;
+import com.weichuang.sensor.ui.adapter.BleDeviceAdapter;
 import com.weichuang.sensor.utils.CommonUtils;
 import com.weichuang.sensor.widget.TipsDialog;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * desc:
@@ -25,9 +33,11 @@ import com.weichuang.sensor.widget.TipsDialog;
 public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implements BluetoothContract.View {
     private final int REQUEST_ENABLE_BLE = 100;
     private final int PERMISSION_REQUEST_COARSE_LOCATION = 10;
+    @BindView(R.id.connected_recycle_view)
+    RecyclerView mConnectedRecyclerView;
 
-
-
+    BleDeviceAdapter mAdapter;
+    List<String> mFeedArticleDataList;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_bluetooth;
@@ -49,6 +59,18 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
      * 设置RecyclerView
      */
     private void initRecyclerView() {
+        mFeedArticleDataList = new ArrayList<>();
+        mFeedArticleDataList.add("唐三藏");
+        mFeedArticleDataList.add("孙悟空");
+        mFeedArticleDataList.add("猪八戒");
+        mFeedArticleDataList.add("沙和尚");
+        mConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+
+        mConnectedRecyclerView.setHasFixedSize(true);
+
+        mAdapter = new BleDeviceAdapter(R.layout.item_ble_device, mFeedArticleDataList);
+
+        mConnectedRecyclerView.setAdapter(mAdapter);
         //mFeedArticleDataList = new ArrayList<>();
 //        mAdapter = new BleDeviceAdapter(R.layout.item_search_pager, mFeedArticleDataList);
 //        mAdapter.setOnItemClickListener((adapter, view, position) -> startArticleDetailPager(view, position));
@@ -62,6 +84,7 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
 //        mAdapter.addHeaderView(mBanner);
 //        mRecyclerView.setAdapter(mAdapter);
     }
+
     @Override
     public void showDeviceUnSupportBleTips() {
         TipsDialog tipsDialog = new TipsDialog(getActivity()) {
@@ -128,7 +151,7 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
             case PERMISSION_REQUEST_COARSE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mPresenter.doScan(true);
-                }else {
+                } else {
                     System.out.println("扫描权限请求失败");
                 }
                 break;
