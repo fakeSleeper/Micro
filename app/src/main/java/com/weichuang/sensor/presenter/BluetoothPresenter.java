@@ -1,18 +1,28 @@
 package com.weichuang.sensor.presenter;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
 
 import com.weichuang.sensor.app.MicroPortApp;
 import com.weichuang.sensor.base.presenter.BasePresenter;
 import com.weichuang.sensor.contract.BluetoothContract;
+import com.weichuang.sensor.model.BleDeviceInfo;
 import com.weichuang.sensor.service.BluetoothLeService;
 import com.weichuang.sensor.ui.fragment.BluetoothFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,11 +35,14 @@ import javax.inject.Inject;
 public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> implements BluetoothContract.Presenter {
 
     private BluetoothAdapter mAdapter;
+    private FragmentActivity mContext;
+    private BluetoothLeService mBluetoothLeService = null;
+    private List<BleDeviceInfo> mDeviceInfoList;
 
 
     @Inject
     public BluetoothPresenter() {
-
+        mDeviceInfoList = new ArrayList<>();
     }
 
     /**
@@ -56,11 +69,21 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
      */
     private void openBluetooth() {
         if (mAdapter.isEnabled()) {
-            //startBluetoothLeService();
+            startBluetoothLeService();
         } else {
             mView.requestOpenBluetooth();
         }
     }
+
+    /**
+     * 开始蓝牙服务
+     */
+    private void startBluetoothLeService() {
+        Intent bindIntent = new Intent(mContext, BluetoothLeService.class);
+        mContext.startService(bindIntent);
+        mContext.bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
 
     /**
      * 注册蓝牙广播
@@ -69,14 +92,14 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
         filter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        ((BluetoothFragment) mView).getActivity().registerReceiver(mReceiver, filter);
+        mContext.registerReceiver(mReceiver, filter);
     }
 
     /**
      * 注册蓝牙广播
      */
     public void unRegisterReceiver() {
-        ((BluetoothFragment) mView).getActivity().unregisterReceiver(mReceiver);
+        mContext.unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -86,6 +109,7 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
             mView.showDeviceUnSupportBleTips();
             return;
         }
+        mContext = ((BluetoothFragment) mView).getActivity();
         registerBleReceiver();
         openBluetooth();
     }
@@ -93,9 +117,118 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
 
     @Override
     public void detachView() {
-        //切换fragment时，关闭接收广播
-        ((BluetoothFragment) mView).getActivity().unregisterReceiver(mReceiver);
+        //切换fragment时，关闭接收广播 ,关闭蓝牙服务
+        mContext.unregisterReceiver(mReceiver);
+        mContext.stopService(new Intent(mContext, BluetoothLeService.class));
+        mContext.unbindService(mServiceConnection);
+        doScan(false);
         super.detachView();
+    }
+
+    /**
+     * 蓝牙服务
+     */
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            System.out.println("bind服务已连接");
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
+                    .getService();
+            if (!mBluetoothLeService.initialize()) {
+                System.out.println("Unable to initialize BluetoothLeService");
+                return;
+            }
+            final int n = mBluetoothLeService.numConnectedDevices();
+            if (n > 0) {
+
+            } else {
+                Scan(true);
+                System.out.println("BluetoothLeService connected");
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+            System.out.println("BluetoothLeService disconnected");
+        }
+    };
+
+    /**
+     * 开启或关闭搜索蓝牙设备，先判断是否有权限
+     */
+    private void Scan(boolean start) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mView.requestPermissionForScan();
+        } else {
+            doScan(start);
+        }
+
+    }
+
+    /**
+     * 开始或停止扫描
+     *
+     * @param start
+     */
+    public void doScan(boolean start) {
+        if (start) {
+            mDeviceInfoList.clear();
+            mAdapter.startLeScan(mScanCallback);
+        } else {
+            mAdapter.stopLeScan(mScanCallback);
+        }
+    }
+
+
+    /**
+     * 蓝牙搜索callback
+     */
+    private BluetoothAdapter.LeScanCallback mScanCallback = (device, rssi, scanRecord) -> {
+
+        System.out.println(String.format("%s (address : %s ,rssi : %d)", device.getName(), device.getAddress(), rssi));
+        if (!deviceInfoExists(device.getAddress())) {
+            // 新设备
+            BleDeviceInfo deviceInfo = new BleDeviceInfo(device, rssi);
+            mDeviceInfoList.add(deviceInfo);
+        } else {
+            // 在集合中已经存在, 更新 RSSI info
+            BleDeviceInfo deviceInfo = findDeviceInfo(device);
+            deviceInfo.updateRssi(rssi);
+            //mScanView.notifyDataSetChanged();
+        }
+
+    };
+
+    /**
+     * 设备是否已添加
+     *
+     * @param device
+     * @return
+     */
+    private BleDeviceInfo findDeviceInfo(BluetoothDevice device) {
+        for (int i = 0; i < mDeviceInfoList.size(); i++) {
+            if (mDeviceInfoList.get(i).getBluetoothDevice().getAddress()
+                    .equals(device.getAddress())) {
+                return mDeviceInfoList.get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 设备是否已经存在
+     *
+     * @param address
+     * @return
+     */
+    private boolean deviceInfoExists(String address) {
+        for (int i = 0; i < mDeviceInfoList.size(); i++) {
+            if (mDeviceInfoList.get(i).getBluetoothDevice().getAddress()
+                    .equals(address)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

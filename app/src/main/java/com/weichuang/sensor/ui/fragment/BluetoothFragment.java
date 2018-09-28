@@ -1,8 +1,12 @@
 package com.weichuang.sensor.ui.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
 
 import com.weichuang.sensor.R;
 import com.weichuang.sensor.app.MicroPortApp;
@@ -20,6 +24,9 @@ import com.weichuang.sensor.widget.TipsDialog;
  */
 public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implements BluetoothContract.View {
     private final int REQUEST_ENABLE_BLE = 100;
+    private final int PERMISSION_REQUEST_COARSE_LOCATION = 10;
+
+
 
     @Override
     protected int getLayoutId() {
@@ -31,6 +38,30 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
 
     }
 
+    @Override
+    protected void initView() {
+        super.initView();
+        initRecyclerView();
+
+    }
+
+    /**
+     * 设置RecyclerView
+     */
+    private void initRecyclerView() {
+        //mFeedArticleDataList = new ArrayList<>();
+//        mAdapter = new BleDeviceAdapter(R.layout.item_search_pager, mFeedArticleDataList);
+//        mAdapter.setOnItemClickListener((adapter, view, position) -> startArticleDetailPager(view, position));
+//        mAdapter.setOnItemChildClickListener((adapter, view, position) -> clickChildEvent(view, position));
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+//        mRecyclerView.setHasFixedSize(true);
+//        //add head banner
+//        LinearLayout mHeaderGroup = ((LinearLayout) LayoutInflater.from(_mActivity).inflate(R.layout.head_banner, null));
+//        mBanner = mHeaderGroup.findViewById(R.id.head_banner);
+//        mHeaderGroup.removeView(mBanner);
+//        mAdapter.addHeaderView(mBanner);
+//        mRecyclerView.setAdapter(mAdapter);
+    }
     @Override
     public void showDeviceUnSupportBleTips() {
         TipsDialog tipsDialog = new TipsDialog(getActivity()) {
@@ -60,13 +91,28 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
     }
 
     @Override
+    public void requestPermissionForScan() {
+        // TODO: 2018/9/20 要测试不同的机型 ，小米，华为，oppo的处理可能不同
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                System.out.println("未授权");
+                getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+            } else {
+                System.out.println("已授权");
+                mPresenter.doScan(true);
+            }
+        }
+    }
+
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_ENABLE_BLE:
                 if (resultCode == Activity.RESULT_OK) {
                 } else {
-                    CommonUtils.showMessage(getActivity(),"主人不让打开蓝牙");
+                    CommonUtils.showMessage(getActivity(), "主人不让打开蓝牙");
                 }
                 break;
             default:
@@ -74,4 +120,20 @@ public class BluetoothFragment extends BaseFragment<BluetoothPresenter> implemen
         }
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_COARSE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mPresenter.doScan(true);
+                }else {
+                    System.out.println("扫描权限请求失败");
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }

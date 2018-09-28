@@ -26,6 +26,11 @@ public interface BluetoothContract {
          * 请求打开蓝牙
          */
         void requestOpenBluetooth();
+
+        /**
+         * 6.0请求蓝牙扫描权限
+         */
+        void requestPermissionForScan();
     }
 
     interface Presenter extends AbstractPresenter<View> {
@@ -33,6 +38,6 @@ public interface BluetoothContract {
          * 本设备是否支持蓝牙
          * @return
          */
-       // boolean isDeviceSupportBluetooth();
+        // boolean isDeviceSupportBluetooth();
     }
 }
