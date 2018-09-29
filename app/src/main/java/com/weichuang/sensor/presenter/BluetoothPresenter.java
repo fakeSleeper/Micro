@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 
+import com.weichuang.sensor.app.Constants;
 import com.weichuang.sensor.app.MicroPortApp;
 import com.weichuang.sensor.base.presenter.BasePresenter;
 import com.weichuang.sensor.contract.BluetoothContract;
@@ -23,8 +24,14 @@ import com.weichuang.sensor.ui.fragment.BluetoothFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * desc:
@@ -38,6 +45,7 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
     private FragmentActivity mContext;
     private BluetoothLeService mBluetoothLeService = null;
     private List<BleDeviceInfo> mDeviceInfoList;
+    private Disposable mDisposable;
 
 
     @Inject
@@ -121,6 +129,10 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
         mContext.unregisterReceiver(mReceiver);
         mContext.stopService(new Intent(mContext, BluetoothLeService.class));
         mContext.unbindService(mServiceConnection);
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            System.out.println("取消定时器");
+            mDisposable.dispose();
+        }
         doScan(false);
         super.detachView();
     }
@@ -166,7 +178,7 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
     }
 
     /**
-     * 开始或停止扫描
+     * 开始或停止扫描 ,每次扫描时长为20秒
      *
      * @param start
      */
@@ -174,8 +186,43 @@ public class BluetoothPresenter extends BasePresenter<BluetoothContract.View> im
         if (start) {
             mDeviceInfoList.clear();
             mAdapter.startLeScan(mScanCallback);
+            //取消以前的定时任务
+            if (mDisposable != null && !mDisposable.isDisposed()) {
+                System.out.println("要重置啦");
+                mDisposable.dispose();
+            }
+            //雷达开始扫描
+            mView.Scaning(true);
+            //10s 后停止扫描
+            Observable.timer(Constants.SCAN_DURATION, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<Long>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            //Observer 与 Observable 的连接
+                            //切换fragment或连续点击 radarView的时候
+                            mDisposable = d;
+                        }
+
+                        @Override
+                        public void onNext(Long aLong) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            System.out.println("停止蓝牙扫描");
+                            mAdapter.stopLeScan(mScanCallback);
+                            mView.Scaning(false);
+                        }
+                    });
         } else {
             mAdapter.stopLeScan(mScanCallback);
+            mView.Scaning(false);
         }
     }
 

@@ -2,8 +2,11 @@ package com.weichuang.sensor.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
@@ -31,7 +34,10 @@ public class RadarView extends AppCompatTextView {
     private Handler handler = new Handler();
 
     //是否正在搜索中
-    private boolean isSearching =false;
+    private boolean isSearching = false;
+
+
+    private BleScanListener mListener;
 
     private Runnable run = new Runnable() {
         @Override
@@ -81,24 +87,67 @@ public class RadarView extends AppCompatTextView {
         // 画一个圆形
         canvas.drawCircle(w / 2, h / 2, w / 2, mPaintLine);
 
-        /*
-        // 绘制渐变圆
-        Shader mShader = new SweepGradient(w / 2, h / 2, Color.TRANSPARENT,
-                getContext().getResources().getColor(R.color.blue_btn_55));
-        // 绘制时渐变
-        mPaintCircle.setShader(mShader);
-        // 增加旋转动画，使用矩阵实现
-        canvas.concat(matrix); // 前置动画
-        canvas.drawCircle(w / 2, h / 2, w /2, mPaintCircle);
-        */
 
+        if (isSearching) {
+            // 绘制渐变圆
+            Shader mShader = new SweepGradient(w / 2, h / 2, Color.TRANSPARENT,
+                    getContext().getResources().getColor(R.color.blue_btn_55));
+            // 绘制时渐变
+            mPaintCircle.setShader(mShader);
+            // 增加旋转动画，使用矩阵实现
+            canvas.concat(matrix); // 前置动画
+            canvas.drawCircle(w / 2, h / 2, w / 2, mPaintCircle);
+        }
 
     }
+
     public boolean getState() {
         return isSearching;
     }
 
+    /**
+     * 控制 radar的旋转 和 BleAdapter 的扫描
+     *
+     * @param state
+     */
     public void setState(boolean state) {
         this.isSearching = state;
+        // 旋转 或 停止
+        if (mListener != null) {
+            mListener.turnBleScan(isSearching);
+        }
+        if (isSearching) {
+            handler.post(run);
+        } else {
+            handler.removeCallbacksAndMessages(null);
+            invalidate();
+        }
+
+
     }
+
+    //仅用于设置 searching状态
+    public void setStateTrue() {
+        this.isSearching = true;
+        handler.post(run);
+    }
+
+    //仅用于设置 searching状态
+    public void setStateFalse() {
+        this.isSearching = false;
+        handler.removeCallbacksAndMessages(null);
+        invalidate();
+    }
+
+    /**
+     * 开始或停止 蓝牙adapter 的扫描
+     */
+    public interface BleScanListener {
+        void turnBleScan(boolean on);
+    }
+
+    public void setBleScanListener(BleScanListener listener) {
+        mListener = listener;
+    }
+
 }

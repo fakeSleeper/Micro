@@ -27,6 +27,10 @@ public class Constants {
     public static final String SETTING = "setting";
     public static final String[] TAGS = {HOSPITAL, TRAIN, SETTING};
 
+    /**
+     * 每次扫描时间
+     */
+    public static long SCAN_DURATION =10 *1000;
 
     /**
      * Tab colors

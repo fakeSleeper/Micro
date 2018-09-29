@@ -31,6 +31,12 @@ public interface BluetoothContract {
          * 6.0请求蓝牙扫描权限
          */
         void requestPermissionForScan();
+
+        /**
+         * 开启或关闭 RadarView 效果
+         * @param start
+         */
+        void Scaning(boolean start);
     }
 
     interface Presenter extends AbstractPresenter<View> {

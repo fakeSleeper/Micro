@@ -71,15 +71,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             mTabHost.setOnTabChangedListener(tabId -> {
                 switch (tabId) {
                     case Constants.HOSPITAL:
-                        mTitleTv.setText(getResources().getString(R.string.title_hospital));
-                        mRadar.setText(getResources().getString(R.string.training));
+                        mTitleTv.setText(R.string.title_hospital);
+                        mRadar.setText(R.string.training);
                         mRadar.setTextColor(getResources().getColor(R.color.news_read));
                         break;
 
                     case Constants.TRAIN:
-                        mTitleTv.setText(getResources().getString(R.string.title_device));
-                        mRadar.setText(getResources().getString(R.string.search_device));
+                        mTitleTv.setText(R.string.title_device);
                         mRadar.setTextColor(getResources().getColor(R.color.blue_btn));
+
+                        mRadar.setText(R.string.search_device);
                         break;
 
                     case Constants.SETTING:
@@ -106,16 +107,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         switch (view.getId()) {
             case R.id.radar:
                 if (mTabHost.getCurrentTab() == 1) {
+                    // TODO: 2018/9/29  也要区分是否 打开了蓝牙和Location权限
+
 
                     mRadar.setTextColor(getResources().getColor(R.color.blue_btn));
                     boolean isSearching = mRadar.getState();
                     if (isSearching) {
-                        mRadar.setText(getResources().getString(R.string.search_device));
+                        mRadar.setText(R.string.search_device);
                     } else {
-                        mRadar.setText(getResources().getString(R.string.searching));
+                        mRadar.setText(R.string.searching);
                     }
-                    // TODO: 2018/9/26  开始或关闭搜索蓝牙设备
-
                     mRadar.setState(!isSearching);
                 } else {
                     mTabHost.setCurrentTab(1);

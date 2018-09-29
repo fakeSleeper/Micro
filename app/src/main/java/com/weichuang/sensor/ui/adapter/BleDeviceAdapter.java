@@ -22,10 +22,9 @@ public class BleDeviceAdapter extends BaseQuickAdapter<String, BleListViewHolder
 
     @Override
     protected void convert(BleListViewHolder holder, String item) {
-//        if (!TextUtils.isEmpty(article.getTitle())) {
-//            helper.setText(R.id.item_search_pager_title, Html.fromHtml(article.getTitle()));
-//        }
-        holder.setText(R.id.item_device_name_view,item);
+        holder.setText(R.id.item_device_name_view, item);
+        //添加点击事件
+        holder.addOnClickListener(R.id.item_device_info_view);
 
     }
 }
